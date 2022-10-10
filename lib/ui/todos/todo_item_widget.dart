@@ -136,118 +136,127 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
       Color priorityIconColor, BuildContext context) {
     return Column(
       children: [
-        ListTile(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
-          tileColor: itemColor,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          title: Text(
-            todo.text,
-            style: textTheme.subtitle1!.copyWith(
-                decoration: isDone ? TextDecoration.lineThrough : null),
-          ),
-          subtitle: Text(
-            DateTimeUtils.formattedDate(todo.dueDate),
-            style: textTheme.bodyText2!.copyWith(
-                color: AppColors.accentColor,
-                height: 2,
-                decoration: isDone ? TextDecoration.lineThrough : null),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              IconButton(
-                onPressed: () => setDoneOrDelete(),
-                icon: Icon(isDone ? Icons.close_sharp : Icons.check_sharp),
-                iconSize: 25,
-              ),
-              IconButton(
-                  icon: Icon(Icons.arrow_upward_rounded,
-                      size: 25, color: priorityIconColor),
-                  onPressed: () {
-                    widget.moveTop();
-                  }),
-              PopupMenuButton(
-                constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width * 0.2,
-                  maxWidth: MediaQuery.of(context).size.width * 0.33,
+        InkWell(
+          onTap: (){
+            showMyForm(context);
+          },
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            tileColor: itemColor,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            title: Text(
+              todo.text,
+              style: textTheme.subtitle1!.copyWith(
+                  decoration: isDone ? TextDecoration.lineThrough : null),
+            ),
+            subtitle: Text(
+              DateTimeUtils.formattedDate(todo.dueDate),
+              style: textTheme.bodyText2!.copyWith(
+                  color: AppColors.accentColor,
+                  height: 2,
+                  decoration: isDone ? TextDecoration.lineThrough : null),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                IconButton(
+                  onPressed: () => setDoneOrDelete(),
+                  icon: Icon(isDone ? Icons.close_sharp : Icons.check_sharp),
+                  iconSize: 25,
                 ),
-                offset: const Offset(-10, 0),
-                child: const Icon(
-                  Icons.menu,
-                  size: 25,
-                ),
-                itemBuilder: (_) {
-                  return [
-                    PopupMenuItem(
+                IconButton(
+                    icon: Icon(Icons.arrow_upward_rounded,
+                        size: 25, color: priorityIconColor),
+                    onPressed: () {
+                      widget.moveTop();
+                    }),
+                PopupMenuButton(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width * 0.2,
+                    maxWidth: MediaQuery.of(context).size.width * 0.33,
+                  ),
+                  offset: const Offset(-10, 0),
+                  child: const Icon(
+                    Icons.menu,
+                    size: 25,
+                  ),
+                  itemBuilder: (_) {
+                    return [
+                      PopupMenuItem(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.settings,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                                  child: Text('Edit'),
+                                )
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            showMyForm(context);
+                          }),
+                      PopupMenuItem(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const Icon(
-                                Icons.settings,
+                                Icons.remove_circle,
                               ),
                               const Padding(
                                 padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                                child: Text('Edit'),
+                                child: Text('Remove'),
                               )
                             ],
                           ),
                         ),
                         onTap: () {
-                          print('onto');
-                          WidgetsBinding?.instance?.addPostFrameCallback((_) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // return const AlertDialog(
-                                //   title: Text('ads'),
-                                //   content: Text('assayed'),
-                                // );
-                                // return Scaffold(
-                                //     body: AddTodoWidget(
-                                //         onSubmitTap: addTodo, todo: todo));
-                                return Dialog(
-                                    child: AddTodoWidget(
-                                        onSubmitTap: editTodo,
-                                        widgetTodo: todoModel));
-                              },
-                            );
-                          });
-                        }),
-                    PopupMenuItem(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Icon(
-                              Icons.remove_circle,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
-                              child: Text('Remove'),
-                            )
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        deleteTodo();
-                      },
-                    )
-                  ];
-                },
-              ),
-              const SizedBox(width: 8),
-            ],
+                          deleteTodo();
+                        },
+                      )
+                    ];
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
           ),
         ),
       ],
     );
+  }
+
+  void showMyForm(BuildContext context) {
+    print('onto');
+    WidgetsBinding?.instance?.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return const AlertDialog(
+          //   title: Text('ads'),
+          //   content: Text('assayed'),
+          // );
+          // return Scaffold(
+          //     body: AddTodoWidget(
+          //         onSubmitTap: addTodo, todo: todo));
+          return Dialog(
+              child: AddTodoWidget(
+                  onSubmitTap: editTodo,
+                  widgetTodo: todoModel));
+        },
+      );
+    });
   }
 
   Future<void> editTodo(TodoModel todoLocal) async {
